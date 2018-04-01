@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.business.mapper.SystemAccountFlowMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.p2p.business.domain.SystemAccountFlow" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="vdate" property="vdate" jdbcType="TIMESTAMP" />
+    <result column="accountActionType" property="accountActionType" jdbcType="TINYINT" />
+    <result column="amount" property="amount" jdbcType="DECIMAL" />
+    <result column="note" property="note" jdbcType="VARCHAR" />
+    <result column="useableAmount" property="useableAmount" jdbcType="DECIMAL" />
+    <result column="freezedAmount" property="freezedAmount" jdbcType="DECIMAL" />
+    <result column="account_id" property="accountId" jdbcType="BIGINT" />
+  </resultMap>
+ 
+  <insert id="insert" parameterType="com.xmg.p2p.business.domain.SystemAccountFlow" useGeneratedKeys="true" keyProperty="id" >
+    insert into systemaccountflow (vdate, accountActionType, amount, note, useableAmount, freezedAmount, account_id)
+    values (#{vdate,jdbcType=TIMESTAMP}, #{accountActionType,jdbcType=TINYINT}, #{amount,jdbcType=DECIMAL}, 
+      #{note,jdbcType=VARCHAR}, #{useableAmount,jdbcType=DECIMAL}, #{freezedAmount,jdbcType=DECIMAL}, 
+      #{accountId,jdbcType=BIGINT})
+  </insert>
+
+</mapper>

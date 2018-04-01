@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.business.mapper.PaymentScheduleDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.p2p.business.domain.PaymentScheduleDetail" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="bidAmount" property="bidAmount" jdbcType="DECIMAL" />
+    <result column="bid_id" property="bidId" jdbcType="BIGINT" />
+    <result column="totalAmount" property="totalAmount" jdbcType="DECIMAL" />
+    <result column="principal" property="principal" jdbcType="DECIMAL" />
+    <result column="interest" property="interest" jdbcType="DECIMAL" />
+    <result column="monthIndex" property="monthIndex" jdbcType="TINYINT" />
+    <result column="deadline" property="deadline" jdbcType="TIMESTAMP" />
+    <result column="bidRequest_id" property="bidRequestId" jdbcType="BIGINT" />
+    <result column="payDate" property="payDate" jdbcType="TIMESTAMP" />
+    <result column="returnType" property="returnType" jdbcType="TINYINT" />
+    <result column="paymentSchedule_id" property="paymentScheduleId" jdbcType="BIGINT" />
+    <result column="toLogininfo_id" property="toLogininfoId" jdbcType="BIGINT" />
+    
+    <association property="fromLogininfo" javaType="com.xmg.p2p.base.domain.Logininfo" columnPrefix="fi">
+	    <id column="id" property="id"/>
+	    <result column="username" property="username"/>
+    </association>
+    
+  </resultMap>
+  
+  <sql id="base_column">
+  	 pd.id, pd.bidAmount, pd.bid_id, pd.totalAmount, pd.principal, pd.interest, pd.monthIndex, pd.deadline, 
+    pd.bidRequest_id, pd.payDate, pd.returnType, pd.paymentSchedule_id, pd.toLogininfo_id ,
+    fi.id as fi_id , fi.username as fi_username
+  </sql>
+  
+  <insert id="insert" parameterType="com.xmg.p2p.business.domain.PaymentScheduleDetail" useGeneratedKeys="true" keyProperty="id" >
+    insert into paymentscheduledetail (bidAmount, bid_id, totalAmount, principal, interest, monthIndex, 
+      deadline, bidRequest_id, payDate,  returnType, paymentSchedule_id, fromLogininfo_id, toLogininfo_id)
+    values (#{bidAmount,jdbcType=DECIMAL}, #{bidId,jdbcType=BIGINT}, #{totalAmount,jdbcType=DECIMAL}, 
+      #{principal,jdbcType=DECIMAL}, #{interest,jdbcType=DECIMAL}, #{monthIndex,jdbcType=TINYINT}, 
+      #{deadline,jdbcType=TIMESTAMP}, #{bidRequestId,jdbcType=BIGINT}, #{payDate,jdbcType=TIMESTAMP}, 
+      #{returnType,jdbcType=TINYINT}, #{paymentScheduleId,jdbcType=BIGINT}, #{fromLogininfo.id,jdbcType=BIGINT}, 
+      #{toLogininfoId,jdbcType=BIGINT})
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.xmg.p2p.business.domain.PaymentScheduleDetail" >
+    update paymentscheduledetail
+    set bidAmount = #{bidAmount,jdbcType=DECIMAL},
+      bid_id = #{bidId,jdbcType=BIGINT},
+      totalAmount = #{totalAmount,jdbcType=DECIMAL},
+      principal = #{principal,jdbcType=DECIMAL},
+      interest = #{interest,jdbcType=DECIMAL},
+      monthIndex = #{monthIndex,jdbcType=TINYINT},
+      deadline = #{deadline,jdbcType=TIMESTAMP},
+      bidRequest_id = #{bidRequestId,jdbcType=BIGINT},
+      payDate = #{payDate,jdbcType=TIMESTAMP},
+      returnType = #{returnType,jdbcType=TINYINT},
+      paymentSchedule_id = #{paymentScheduleId,jdbcType=BIGINT},
+      fromLogininfo_id = #{fromLogininfo.id,jdbcType=BIGINT},
+      toLogininfo_id = #{toLogininfoId,jdbcType=BIGINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select <include refid="base_column" />
+    from paymentscheduledetail  pd join logininfo fi ON  pd.fromLogininfo_id = fi.id 
+    where pd.id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  <select id="selectByPaymentSchedule" resultMap="BaseResultMap" >
+   select <include refid="base_column" />
+   from paymentscheduledetail  pd join logininfo fi ON  pd.fromLogininfo_id = fi.id 
+    where pd.paymentSchedule_id = #{id,jdbcType=BIGINT}
+  </select>
+  
+  
+  
+ 
+</mapper>

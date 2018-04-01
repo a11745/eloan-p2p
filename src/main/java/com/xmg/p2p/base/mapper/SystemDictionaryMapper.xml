@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.base.mapper.SystemDictionaryMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.p2p.base.domain.SystemDictionary" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="sn" property="sn" jdbcType="VARCHAR" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from `SystemDictionary`
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xmg.p2p.base.domain.SystemDictionary" useGeneratedKeys="true" keyProperty="id" >
+    insert into `SystemDictionary` (sn, title)
+    values (#{sn,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xmg.p2p.base.domain.SystemDictionary" >
+    update `SystemDictionary`
+    set sn = #{sn,jdbcType=VARCHAR},
+      title = #{title,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, sn, title
+    from `SystemDictionary`
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, sn, title
+    from `SystemDictionary`
+  </select>
+  
+  <sql id="base_value">
+  	<where>
+  		<if test="keyword!=null">
+  			AND (sn LIKE concat('%',#{keyword},'%')OR title LIKE concat('%',#{keyword},'%'))
+  		</if>
+  	</where>
+  </sql>
+  
+  <select id="queryForCount" resultType="int">
+  	SELECT count(id) FROM systemdictionary
+  	<include refid="base_value"></include> 
+  </select>
+  <select id="query" resultMap="BaseResultMap">
+  	SELECT id, sn, title 
+  	FROM systemdictionary
+  	<include refid="base_value"></include>
+  	LIMIT #{start},#{pageSize}
+  </select>
+</mapper>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.business.mapper.UserBankinfoMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.p2p.business.domain.UserBankinfo" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="forkName" property="forkName" jdbcType="VARCHAR" />
+    <result column="bankName" property="bankName" jdbcType="VARCHAR" />
+    <result column="accountNumber" property="accountNumber" jdbcType="VARCHAR" />
+    <result column="accountName" property="accountName" jdbcType="VARCHAR" />
+    
+     <association property="logininfo" javaType="com.xmg.p2p.base.domain.Logininfo" columnPrefix="li_">
+    	<id column="id" property="id"/>
+    	<result column="username" property="username"/>
+    </association>
+    
+  </resultMap>
+  
+  <insert id="insert" parameterType="com.xmg.p2p.business.domain.UserBankinfo" useGeneratedKeys="true" keyProperty="id" >
+    insert into userbankinfo (forkName, bankName, accountNumber, 
+      logininfo_id, accountName)
+    values (#{forkName,jdbcType=VARCHAR}, #{bankName,jdbcType=VARCHAR}, #{accountNumber,jdbcType=VARCHAR}, 
+      #{logininfo.id,jdbcType=BIGINT}, #{accountName,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="selectByUser" resultMap="BaseResultMap"  > 
+    select u.id, u.forkName, u.bankName, u.accountNumber, u.logininfo_id, u.accountName ,
+    li.id as li_id ,li.username as li_username
+    from userbankinfo u join logininfo li on u.logininfo_id = li.id 
+    where u.logininfo_id = #{id,jdbcType=BIGINT}
+  </select>
+ 
+ 
+</mapper>

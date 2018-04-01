@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.xmg.p2p.base.mapper.SystemDictionaryItemMapper" >
+  <resultMap id="BaseResultMap" type="com.xmg.p2p.base.domain.SystemDictionaryItem" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="parentId" property="parentId" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="sequence" property="sequence" jdbcType="TINYINT" />
+  </resultMap>
+  
+  <resultMap type="com.xmg.p2p.base.domain.SystemDictionaryItem" id="smallResultMap">
+  	  <id column="id" property="id" jdbcType="BIGINT" />
+  	   <result column="title" property="title" jdbcType="VARCHAR" />
+  </resultMap>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Long" >
+    delete from `systemdictionaryitem`
+    where id = #{id,jdbcType=BIGINT}
+  </delete>
+  <insert id="insert" parameterType="com.xmg.p2p.base.domain.SystemDictionaryItem" useGeneratedKeys="true" keyProperty="id" >
+    insert into `systemdictionaryitem` (parentId, title, sequence
+      )
+    values (#{parentId,jdbcType=BIGINT}, #{title,jdbcType=VARCHAR}, #{sequence,jdbcType=TINYINT}
+      )
+  </insert>
+  <update id="updateByPrimaryKey" parameterType="com.xmg.p2p.base.domain.SystemDictionaryItem" >
+    update `systemdictionaryitem`
+    set parentId = #{parentId,jdbcType=BIGINT},
+      title = #{title,jdbcType=VARCHAR},
+      sequence = #{sequence,jdbcType=TINYINT}
+    where id = #{id,jdbcType=BIGINT}
+  </update>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select id, parentId, title, sequence
+    from `systemdictionaryitem`
+    where id = #{id,jdbcType=BIGINT}
+  </select>
+  <select id="selectAll" resultMap="BaseResultMap" >
+    select id, parentId, title, sequence
+    from `systemdictionaryitem`
+  </select>
+  <sql id="base_column">
+  	id, parentId, title, sequence
+  </sql>
+  <sql id="base_where">
+  	<where>
+  		<if test="parentId!=null">
+  			AND parentId =#{parentId}
+  		</if>
+  		<if test="keyword!=null">
+  			AND title LIKE concat('%',#{keyword},'%')
+  		</if>
+  	</where>
+  </sql>
+  <select id="queryForCount" resultType="int">
+  	select count(id) 
+  	from systemdictionaryitem 
+  	<include refid="base_where"></include>
+  </select>
+  
+  <select id="query" resultMap="BaseResultMap">
+  	SELECT <include refid="base_column"></include>
+  	FROM systemdictionaryitem 
+  	<include refid="base_where"></include>
+  	LIMIT #{start},#{pageSize}
+  </select>
+  
+  <select id="listByParentSn" resultMap="smallResultMap">
+  	SELECT item.id as id,item.title  as title
+  	FROM systemdictionaryitem item JOIN systemdictionary d ON item.parentId=d.id 
+  	WHERE d.sn=#{sn}
+  	ORDER BY item.sequence ASC
+  </select>
+</mapper>
